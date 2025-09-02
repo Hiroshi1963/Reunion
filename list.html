@@ -1,0 +1,25 @@
+<table border="1">
+  <thead>
+    <tr><th>登録日時</th><th>名前</th><th>メール</th><th>コメント</th></tr>
+  </thead>
+  <tbody id="tableBody"></tbody>
+</table>
+
+<script>
+async function loadRegistrations() {
+  const tbody = document.getElementById('tableBody');
+  try {
+    const res = await fetch('/registrations');
+    const data = await res.json();
+    tbody.innerHTML = '';
+    data.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${item.timestamp}</td><td>${item.name}</td><td>${item.email}</td><td>${item.comment || ''}</td>`;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="4">読み込みエラー</td></tr>';
+  }
+}
+loadRegistrations();
+</script>

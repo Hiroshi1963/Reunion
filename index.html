@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ericsson Japan PDC/WCDMA Reunion</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #00468b;
+      color: #fff;
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+    header img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    section p {
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    input[type="text"],
+    input[type="email"] {
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      background-color: #00468b;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #0060c0;
+    }
+    #message {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #00468b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ericsson Japan PDC/WCDMA Reunion<br>エリクソン・ジャパンPDC/WCDMA同窓会</h1>
+    <img src="reunion1.jpg" alt="Reunion Image">
+  </header>
+
+  <main>
+    <section>
+      <p>
+        エリクソン・ジャパン関係者の集まりを11月15日に計画しています。場所は新橋汐留口、汐留シティセンター４１階、ルミヴェール東京 クリスタルレジデンスにて、13:30より15:30まで行います。
+      </p>
+      <p>
+        エリクソンに長年勤められておられた皆様、現在も勤められている方、お知り合いの方も含め、旧交を温め、さらに新たな発見、出会いを求める方々を広く歓迎致します。参加される方は本ページのイベント登録にエントリーください。予算は9000円程度を予定しています。
+      </p>
+      <p>
+        尚、本集まりをご存知ない方も多数います。どうぞ皆様方の友人、知人にお声がけをお願い致します。
+      </p>
+      <p>
+        ボランティア企画メンバー：青木、黒瀬、福地、伏見、松浦、安森、川田
+      </p>
+      <hr>
+      <p>
+        We are planning an Ericsson gathering on November 15th. Location is Shimbashi, Shiodome City Center 41st floor, Lumiveil Tokyo, from 13:30-15:30. For those who have worked for Ericsson, those working at Ericsson, an opportunity to renew old friendships and develop new connections. For those who will join, please register from Event Registration in this page. We expect fee to be 9,000 yen. Please help by letting your friends, colleagues know about this event.
+      </p>
+      <p>
+        Volunteer Planning Committee<br>
+        Aoki, Fukuchi, Fushimi, Kurose, Matsuura, Yasumori, Kawada
+      </p>
+    </section>
+
+<section>
+  <h2>イベント登録</h2>
+  <form id="registerForm">
+    <input type="text" id="name" placeholder="名前" required>
+    <input type="email" id="email" placeholder="メールアドレス" required>
+    <textarea id="comment" placeholder="コメント（任意）" rows="4"></textarea>
+    <button type="submit">登録</button>
+  </form>
+  <p id="message"></p>
+  <a href="list.html">登録者一覧を見る</a>
+</section>
+
+  </main>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const comment = document.getElementById('comment').value.trim();
+  const messageEl = document.getElementById('message');
+
+  // 入力チェック
+  if (!name) { messageEl.style.color='red'; messageEl.textContent = "名前を入力してください"; return; }
+  if (!email.match(/^[^@]+@[^@]+\.[^@]+$/)) { messageEl.style.color='red'; messageEl.textContent = "メールアドレスが不正です"; return; }
+
+  try {
+    const res = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, comment })
+    });
+    const data = await res.json();
+    messageEl.style.color = data.success ? 'green' : 'red';
+    messageEl.textContent = data.message;
+    if (data.success) document.getElementById('registerForm').reset();
+  } catch (err) {
+    messageEl.style.color = 'red';
+    messageEl.textContent = "送信エラー";
+  }
+});
+</script>
+</body>
+</html>
