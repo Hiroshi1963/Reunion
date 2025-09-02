@@ -12,11 +12,12 @@ async function loadRegistrations() {
     const res = await fetch('/registrations');
     const data = await res.json();
     tbody.innerHTML = '';
-    data.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${item.timestamp}</td><td>${item.name}</td><td>${item.email}</td><td>${item.comment || ''}</td>`;
-      tbody.appendChild(tr);
-    });
+data.forEach(item => {
+  const commentHTML = item.comment ? item.comment.replace(/\\n/g, "<br>") : "";
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${item.timestamp}</td><td>${item.name}</td><td>${item.email}</td><td>${commentHTML}</td>`;
+  tbody.appendChild(tr);
+});
   } catch (err) {
     tbody.innerHTML = '<tr><td colspan="4">読み込みエラー</td></tr>';
   }

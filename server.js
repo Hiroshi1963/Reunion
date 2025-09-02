@@ -7,6 +7,7 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
 app.use(express.json());
 
 // Serve static files from current directory
@@ -19,10 +20,12 @@ function isValidEmail(e){ return typeof e === 'string' && /^[^@\s]+@[^@\s]+\.[^@
 app.post('/register', (req, res) => {
   const { name, email, comment } = req.body || {};
   const timestamp = new Date().toISOString();
-  const line = `${timestamp}\t${name}\t${email}\t${comment}\n`;
+
+  // 改行をエスケープ文字に置換
+  const safeComment = comment.replace(/\r?\n/g, "\\n");
+  const line = `${timestamp}\t${name}\t${email}\t${safeComment}\n`;
 
   const filePath = path.join(__dirname, 'registrations.txt');
-  console.log("書き込みテスト:", line);
 
   fs.appendFile(filePath, line, (err) => {
     if (err) {
